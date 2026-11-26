@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小猫猫虫的打印工作室 - 3D打印助手</title>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #fff;
+            padding: 24px 20px;
+            text-align: center;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .studio-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: #93c5fd;
+        }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 13px;
+            color: #cbd5e1;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .download-banner {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .download-info h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .download-info p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .download-btn {
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+
+        .download-btn:active {
+            transform: scale(0.96);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 20px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .issue-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .issue-card:active {
+            transform: scale(0.98);
+            background: #f1f5f9;
+        }
+
+        .issue-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .issue-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .issue-card p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.3;
+        }
+
+        .calc-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #475569;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #f8fafc;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+            background: #fff;
+        }
+
+        .calc-res-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .res-display {
+            margin-top: 12px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            color: #166534;
+            display: none;
+        }
+
+        .material-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mat-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: #0f172a;
+        }
+
+        .mat-specs {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .mat-specs span {
+            display: block;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-end;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.25s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: #f1f5f9;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        .modal-section {
+            margin-bottom: 14px;
+        }
+
+        .modal-section h5 {
+            font-size: 13px;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .modal-section p, .modal-section ul {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #1e293b;
+        }
+
+        .modal-section ul {
+            padding-left: 18px;
+        }
+
+        .tip-box {
+            background: #fffbeb;
+            border-left: 3px solid #f59e0b;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #b45309;
+            margin-top: 14px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="studio-badge">★ 小猫猫虫工作室 ★</div>
+        <h1>3D 打印新手避坑速查助手</h1>
+        <p>切片参数速查 · 故障快速排查 · 实用计算器</p>
+    </header>
+
+    <div class="container">
+        <!-- 下载离线版按钮 -->
+        <div class="download-banner">
+            <div class="download-info">
+                <h3>💾 保存到手机 / 电脑</h3>
+                <p>一键下载离线文件，随时断网秒开</p>
+            </div>
+            <button class="download-btn" onclick="downloadCurrentHTML()">
+                <span>⬇</span> 点击下载
+            </button>
+        </div>
+
+        <!-- 故障速查 -->
+        <div class="section-title">常见打印故障排查</div>
+        <div class="grid-2">
+            <div class="issue-card" onclick="openIssue('stringing')">
+                <div class="issue-icon">🕸️</div>
+                <h4>表面拉丝 / 蛛网</h4>
+                <p>模型间细丝缠绕</p>
+            </div>
+            <div class="issue-card" onclick="openIssue('warping')">
+                <div class="issue-icon">📐</div>
+                <h4>底部翘边 / 脱床</h4>
+                <p>底角脱离热床翘起</p>
+            </div>
+            <div class="issue-card" onclick="openIssue('firstlayer')">
+                <div class="issue-icon">🥞</div>
+                <h4>首层不粘 / 刮擦</h4>
+                <p>第一层出料不匀或脱落</p>
+            </div>
+            <div class="issue-card" onclick="openIssue('spaghetti')">
+                <div class="issue-icon">🍜</div>
+                <h4>打印炒面</h4>
+                <p>模型移位喷头悬空吐丝</p>
+            </div>
+            <div class="issue-card" onclick="openIssue('clog')">
+                <div class="issue-icon">🚫</div>
+                <h4>堵头 / 不出料</h4>
+                <p>进料齿轮打滑或挤不出</p>
+            </div>
+            <div class="issue-card" onclick="openIssue('zseam')">
+                <div class="issue-icon">⚡</div>
+                <h4>表面疙瘩 / Z缝</h4>
+                <p>外壁有凸起点或明显接缝</p>
+            </div>
+        </div>
+
+        <!-- 耗材参考 -->
+        <div class="section-title">常用耗材建议温度</div>
+        <div class="material-card">
+            <div class="mat-name">PLA / PLA+</div>
+            <div class="mat-specs">
+                <span>喷嘴: 195 - 215 ℃</span>
+                热床: 50 - 60 ℃ (无需封箱)
+            </div>
+        </div>
+        <div class="material-card">
+            <div class="mat-name">PETG</div>
+            <div class="mat-specs">
+                <span>喷嘴: 230 - 245 ℃</span>
+                热床: 70 - 80 ℃ (风扇 30-50%)
+            </div>
+        </div>
+        <div class="material-card">
+            <div class="mat-name">ABS / ASA</div>
+            <div class="mat-specs">
+                <span>喷嘴: 240 - 260 ℃</span>
+                热床: 90 - 105 ℃ (强烈建议封箱)
+            </div>
+        </div>
+        <div class="material-card">
+            <div class="mat-name">TPU (柔性耗材)</div>
+            <div class="mat-specs">
+                <span>喷嘴: 210 - 230 ℃</span>
+                热床: 40 - 60 ℃ (打印速度降至20-30mm/s)
+            </div>
+        </div>
+
+        <!-- 小工具 -->
+        <div class="section-title">打印成本速算</div>
+        <div class="calc-box">
+            <div class="form-group">
+                <label>耗材购买单价 (元 / 公斤/1000g)</label>
+                <input type="number" id="matPrice" value="45" placeholder="例如: 45">
+            </div>
+            <div class="form-group">
+                <label>切片显示耗材克重 (g)</label>
+                <input type="number" id="modelWeight" placeholder="例如: 120">
+            </div>
+            <button class="calc-res-btn" onclick="calcCost()">计算实际耗材成本</button>
+            <div class="res-display" id="costResult"></div>
+        </div>
+
+        <footer>
+            © 小猫猫虫的打印工作室 · 专注3D打印实用配件与服务
+        </footer>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="modal-overlay" id="issueModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-title" id="mTitle">故障详情</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-section">
+                <h5>常见原因</h5>
+                <p id="mReason"></p>
+            </div>
+            <div class="modal-section">
+                <h5>切片与调试建议</h5>
+                <ul id="mSteps"></ul>
+            </div>
+            <div class="tip-box" id="mTip">
+                小猫猫虫工作室贴士：排查前先确认耗材已充分干燥。
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const issuesData = {
+            stringing: {
+                title: "表面拉丝 / 蛛网",
+                reason: "喷头移动时熔融料从喷嘴渗漏，或耗材严重受潮。",
+                steps: [
+                    "增加切片中的【回抽距离】（近程挤出建议 0.8-1.5mm，远程建议 4-6mm）。",
+                    "适当提高【回抽速度】（建议 35-45 mm/s）。",
+                    "降低喷嘴打印温度 5 - 10 ℃ 测试。",
+                    "切片中开启【擦嘴 / 避让已打印区域】选项。"
+                ],
+                tip: "如果调高回抽依然拉丝严重，90% 是耗材受潮了！建议使用烘干箱或真空防潮袋保存。"
+            },
+            warping: {
+                title: "底部翘边 / 脱床",
+                reason: "模型底部冷却不均匀收缩导致脱离热床，常见于大底面或 ABS/PETG 打印。",
+                steps: [
+                    "在切片中开启【外沿 (Brim)】增加底部附着面积。",
+                    "热床温度提高 5 - 10 ℃。",
+                    "前 2 - 3 层关闭模型冷却风扇。",
+                    "彻底用酒精清洁 PEI 打印板表面油污和指纹。"
+                ],
+                tip: "高温耗材如 ABS/ASA 务必封箱打印，避免外界冷风直吹引起强收缩翘边。"
+            },
+            firstlayer: {
+                title: "首层不粘 / 刮擦",
+                reason: "Z轴近距偏置 (Z-offset) 不准，或者热床未校准水平。",
+                steps: [
+                    "重新校准 Z-offset：出料呈圆线说明离太远，刮擦板面甚至出不来料说明离太近。",
+                    "首层打印速度降至 15 - 20 mm/s。",
+                    "稍微加大首层挤出线宽（例如 0.42mm 调至 0.5mm）。"
+                ],
+                tip: "PEI 弹簧钢板定期用洗洁精温水冲洗，除油效果远好于单纯酒精擦拭。"
+            },
+            spaghetti: {
+                title: "打印中途炒面",
+                reason: "模型中途从热床脱落、严重撞刀、或悬空无支撑悬空打印。",
+                steps: [
+                    "检查模型是否有大于 60° 的悬空结构未加【支撑】。",
+                    "切片开启【Z轴抬升 (Z-hop)】避免喷嘴快速移动撞击模型。",
+                    "改善首层附着力，防止中途晃动脱床。"
+                ],
+                tip: "打印大型或高细长零件时，强力推荐加上裙边外沿（Brim）。"
+            },
+            clog: {
+                title: "堵头 / 不出料",
+                reason: "喉管散热不足导致热爬升堵料、耗材杂质、或喷嘴温度过低。",
+                steps: [
+                    "升高温度至 240℃ 进行手动进料疏通，或用疏通针清理。",
+                    "检查喉管小风扇是否积灰或停转。",
+                    "清理挤出机齿轮上的耗材碎屑磨损。"
+                ],
+                tip: "频繁堵头通常是特氟龙管老化或喉管散热差导致的，需要及时更换备件。"
+            },
+            zseam: {
+                title: "表面疙瘩 / Z缝明显",
+                reason: "每一层闭合处的起刀与收刀点外凸，或耗材受潮炸膛吐泡。",
+                steps: [
+                    "在切片中将【接缝位置】设为【背面】或【后角】，避免出现在正面。",
+                    "开启【压力提前 (Pressure Advance)】或【线性前进 (Linear Advance)】。",
+                    "开启【滑行 (Coasting)】减少收刀时的多余溢料。"
+                ],
+                tip: "表面随机分布的细小凹坑/爆音通常是耗材吸水后气化造成的，必须先烘干耗材。"
+            }
+        };
+
+        function openIssue(key) {
+            const data = issuesData[key];
+            if (!data) return;
+            document.getElementById('mTitle').innerText = data.title;
+            document.getElementById('mReason').innerText = data.reason;
+            const stepsUl = document.getElementById('mSteps');
+            stepsUl.innerHTML = '';
+            data.steps.forEach(s => {
+                const li = document.createElement('li');
+                li.innerText = s;
+                stepsUl.appendChild(li);
+            });
+            document.getElementById('mTip').innerText = '小猫猫虫工作室贴士：' + data.tip;
+            document.getElementById('issueModal').style.display = 'flex';
+        }
+
+        function closeModal(e) {
+            document.getElementById('issueModal').style.display = 'none';
+        }
+
+        function calcCost() {
+            const price = parseFloat(document.getElementById('matPrice').value) || 0;
+            const weight = parseFloat(document.getElementById('modelWeight').value) || 0;
+            if (weight <= 0) {
+                alert('请输入有效的耗材克重');
+                return;
+            }
+            const cost = (price / 1000) * weight;
+            const res = document.getElementById('costResult');
+            res.style.display = 'block';
+            res.innerHTML = `耗材纯成本：<strong>¥ ${cost.toFixed(2)}</strong> 元<br><span style="font-size:11px; color:#6b7280;">(建议工作室闲鱼代打最低起步报价：¥ ${(cost * 2.5 + 5).toFixed(1)} 元)</span>`;
+        }
+
+        // 下载当前页面的功能
+        function downloadCurrentHTML() {
+            const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([fullHtml], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = '小猫猫虫3D打印助手.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
